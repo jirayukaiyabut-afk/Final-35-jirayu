@@ -1,98 +1,65 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useState, useEffect } from "react";
+  import {  Text, View,FlatList, TouchableOpacity, StyleSheet } from "react-native";
+  import AsyncStorage from "@react-native-async-storage/async-storage"
+ import Index from '../../scripts/reset-project';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+  type Food = {
+    id : string,
+    price : string
+  }
+  export default function Home(){
+   const [allFood, setAllFood] = useState<Food[]>([])
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    useEffect(() => {
+      loadFood()
+    }, [])
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    async function loadFood(){
+      const data = await AsyncStorage.getItem("Food")
+      if(data !== null){
+        setAllFood(JSON.parse(data))
+      }
+    }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+    async function  removeFood(id:string) {
+      const newFood = allFood.filter((_, i) => _.id != id)
+      await AsyncStorage.setItem("Food", JSON.stringify(newFood))
+      setAllFood(newFood)
+    }
+
+     return(
+         <View>
+
+             <FlatList
+               data={allFood}
+               keyExtractor={(item) => item.id.toString()}
+               renderItem={({item})=>(
+               <View style={myStyle.box1}>
+                  <Text style={{fontWeight:"600"}}>อาหาร : {item.id}</Text>
+                  <Text style={{fontWeight:"600"}}>ราคา : {item.price}</Text>
+                  <TouchableOpacity style={myStyle.rebutton} onPress={() => removeFood(item.id)}>
+                     <Text style={{color:"white",fontWeight:"800"}}>ลบ</Text>
+                  </TouchableOpacity>
+               </View>
+               )}
+             />                 
+
+         </View>
+     )
+  }
+
+  const myStyle = StyleSheet.create({
+    rebutton:{
+      width:"80%",
+      height:35,
+      backgroundColor:"#FF6666",
+      alignItems:"center",
+      justifyContent:"center"
+    },
+    box1:{
+      flex:1,
+      alignItems:"center",
+      justifyContent:"center",
+      gap:10
+    }
+  })
