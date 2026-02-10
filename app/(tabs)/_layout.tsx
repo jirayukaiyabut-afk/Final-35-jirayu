@@ -7,19 +7,29 @@ export default function Layout(){
             <Tabs.Screen
                 name="index"
                 options={{
-                    title:"หน้าแรก",
+                    title:"รายการเมนูทั้งหมด",
                     tabBarIcon: () => (
-                        <Ionicons name="home" size={20} color="blue" />
+                        <Ionicons name="home" size={20} color="lightblue" />
                     )
                 }}
             />
 
             <Tabs.Screen
-                name="add"
+                name="Food"
                 options={{
                     title:"เมนูอาหาร",
                     tabBarIcon: () => (
-                        <Ionicons name="add" size={25} color="lightblue" />
+                        <Ionicons name="pizza" size={20} color="lightblue" />
+                    )
+                }}
+            />
+
+            <Tabs.Screen
+                name="drink"
+                options={{
+                    title:"เมนูเครื่องดื่ม",
+                    tabBarIcon: () => (
+                        <Ionicons name="water" size={20} color="lightblue" />
                     )
                 }}
             />

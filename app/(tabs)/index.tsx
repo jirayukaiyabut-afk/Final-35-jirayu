@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-  import {  Text, View,FlatList, TouchableOpacity, StyleSheet } from "react-native";
-  import AsyncStorage from "@react-native-async-storage/async-storage"
- import Index from '../../scripts/reset-project';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
   type Food = {
     id : string,
+    name : string,
     price : string
   }
   export default function Home(){
@@ -35,7 +35,7 @@ import { useState, useEffect } from "react";
                keyExtractor={(item) => item.id.toString()}
                renderItem={({item})=>(
                <View style={myStyle.box1}>
-                  <Text style={{fontWeight:"600"}}>อาหาร : {item.id}</Text>
+                  <Text style={{fontWeight:"600"}}>อาหาร : {item.name}</Text>
                   <Text style={{fontWeight:"600"}}>ราคา : {item.price}</Text>
                   <TouchableOpacity style={myStyle.rebutton} onPress={() => removeFood(item.id)}>
                      <Text style={{color:"white",fontWeight:"800"}}>ลบ</Text>
