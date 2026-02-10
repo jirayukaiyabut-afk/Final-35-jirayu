@@ -2,42 +2,42 @@ import { useState, useEffect } from "react";
   import {  Text, View, TextInput, Button, StyleSheet } from "react-native";
   import AsyncStorage from "@react-native-async-storage/async-storage"
 
-  type Food= {
+  type drink= {
     id : string,
     name : string,
     price : string
   }
   export default function Add(){
-    const [FoodName,setFoodName] = useState("")
-    const [FoodPrice, setFoodPrice] = useState("")
-    const [allFood, setAllFood] = useState<Food[]>([])
+    const [drinkName,setdrinkName] = useState("")
+    const [drinkPrice, setdrinkPrice] = useState("")
+    const [alldrink, setAlldrink] = useState<drink[]>([])
 
     useEffect(() => {
-      loadFood()
-    }, [allFood])
+      loaddrink()
+    }, [alldrink])
 
-    async function loadFood(){
-      const data = await AsyncStorage.getItem("Food")
+    async function loaddrink(){
+      const data = await AsyncStorage.getItem("drink")
       if(data !== null){
-        setAllFood(JSON.parse(data))
+        setAlldrink(JSON.parse(data))
       }
     }
 
-    async function addFood(){
-      const Food = {
+    async function adddrink(){
+      const drink = {
         id : Date.now().toString(),
-        name : FoodName,
-        price : FoodPrice
+        name : drinkName,
+        price : drinkPrice
       }
 
-      console.log(Food)
+      console.log(drink)
 
-      const newFood = [...allFood, Food]
-      await AsyncStorage.setItem("Food", JSON.stringify (newFood))
-      setAllFood(newFood)
+      const newdrink = [...alldrink, drink]
+      await AsyncStorage.setItem("drink", JSON.stringify (newdrink))
+      setAlldrink(newdrink)
 
-      setFoodName("")
-      setFoodPrice("")
+      setdrinkName("")
+      setdrinkPrice("")
 
     }
 
@@ -45,15 +45,15 @@ import { useState, useEffect } from "react";
          <View style={{alignItems:"center",justifyContent:"center",gap:10}}>
               <Text style={{fontWeight:"600"}}>ชื่อเครื่องดื่ม</Text>
               <TextInput 
-              value={FoodName}
-              onChangeText={setFoodName}
+              value={drinkName}
+              onChangeText={setdrinkName}
               style={myStyle.input} />
               <Text style={{fontWeight:"600"}}>ราคาเครื่องดื่ม</Text>
               <TextInput 
-              value={FoodPrice}
-              onChangeText={setFoodPrice}
+              value={drinkPrice}
+              onChangeText={setdrinkPrice}
               style={myStyle.input} />
-              <Button title="นำเข้ามา" onPress={() => addFood()} />
+              <Button title="นำเข้ามา" onPress={() => adddrink()} />
          </View>
      )
   }
